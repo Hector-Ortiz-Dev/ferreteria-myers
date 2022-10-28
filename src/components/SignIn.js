@@ -8,7 +8,6 @@ import Alert from './../elements/Alert'
 import {auth} from './../firebase/firebaseConfig'
 import {createUserWithEmailAndPassword} from 'firebase/auth'
 import {useNavigate} from 'react-router-dom'
-import { collection, addDoc } from 'firebase/firestore'
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -63,13 +62,7 @@ export default function SignIn() {
       return;
     }
 
-    try{
-      await changeStateAlert(true);
-      changeAlert({
-        type: 'success',
-        message: 'Te registraste existosamente.'
-      });
-      
+    try{      
       await createUserWithEmailAndPassword(auth, email, password);
       navigate('/');
     } catch(error){
@@ -89,6 +82,7 @@ export default function SignIn() {
           break;
         default:
           message = 'Hubo un error al intentar crear la cuenta';
+          console.log(error.code);
           break;
       }
 

@@ -10,31 +10,29 @@ const Navbar = () =>
   const {user} = useAuth();
   console.log(user);
 
-  {
-    return (
-      <>
-        <NavContainer>
-            <NavLink to='/'><img src={logo} alt="GpiiToms" height='60px'/></NavLink>
-            <Container Search>
-              <Input search type={'text'} placeholder={'Buscar un articulo'}></Input>
-              <Button search type="submit">
-                Buscar
-              </Button>
-            </Container>
-            <div>
-              {
-                user != null ? 
-                <ButtonCloseSession/> :
-                <>
-                <Button LogIn><NavLink to='/LogIn'>Ingresar</NavLink></Button>
-                <Button SignIn><NavLink to='/SignIn'>Registrar</NavLink></Button>
-                </>
-              }
-            </div>
-        </NavContainer>
-      </>
-    );
-  }
+  return (
+    <>
+      <NavContainer>
+          <NavLink to='/'><img src={logo} alt="GpiiToms" height='60px'/></NavLink>
+          <Container Search>
+            <Input search type={'text'} placeholder={'Buscar un articulo'}></Input>
+            <Button search type="submit">
+              Buscar
+            </Button>
+          </Container>
+          <div>
+            {
+              user != null ? 
+              <ButtonCloseSession/> :
+              <>
+              <Button LogIn><NavLink to='/LogIn'>Ingresar</NavLink></Button>
+              <Button SignIn><NavLink to='/SignIn'>Registrar</NavLink></Button>
+              </>
+            }
+          </div>
+      </NavContainer>
+    </>
+  );
 }
 
 const Container = styled.div`

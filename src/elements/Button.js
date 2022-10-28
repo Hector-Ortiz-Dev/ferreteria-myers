@@ -43,9 +43,8 @@ const Button = styled.button`
     ${props => props.VerMas && css`
         width: 9rem;
         height: 2.5rem;
-        border: 3px solid #EE7D26;
-        background: #C46820;
-        text-align: center;
+        border: 3px solid var(--princeton-orange);
+        background: var(--alloy-orange);
         border-radius: 10px;
         cursor: pointer;
         font-size: 20px;
