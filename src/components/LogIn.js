@@ -8,6 +8,8 @@ import {useNavigate} from 'react-router-dom'
 import {auth} from './../firebase/firebaseConfig'
 import Alert from './../elements/Alert'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import Figura from '../elements/Figura'
+import { FaUser } from 'react-icons/fa'
 
 
 const LogIn = () =>
@@ -64,12 +66,12 @@ const LogIn = () =>
   }
 
   return (
-    <>
+    <div style={{position:'relative', overflow:'hidden'}}>
       <TitlePage><h1>Ingresar</h1></TitlePage>
       <Container>
         <Container Main>
+          <Figura Login><FaUser className='icono'/></Figura>
           <FormGlass action='' onSubmit={handleSubmit}>
-
             <TextArea
                 type="email"
                 name="email"
@@ -110,7 +112,7 @@ const LogIn = () =>
           />
         </Container>
       </Container>
-    </>
+    </div>
   )
 }
 

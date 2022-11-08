@@ -6,10 +6,12 @@ import TextArea from '../elements/TextArea'
 import Button from '../elements/Button'
 import Alert from './../elements/Alert'
 import {auth} from './../firebase/firebaseConfig'
-import {createUserWithEmailAndPassword} from 'firebase/auth'
+import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth'
 import {useNavigate} from 'react-router-dom'
+import Figura from '../elements/Figura'
+import { FaUser } from 'react-icons/fa'
 
-export default function SignIn() {
+const SignIn = () => {
   const navigate = useNavigate();
   const [name, changeName] = useState('');
   const [email, changeEmail] = useState('');
@@ -64,8 +66,10 @@ export default function SignIn() {
 
     try{      
       await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(auth.currentUser, {displayName: name});
       navigate('/');
-    } catch(error){
+      window.location.reload();
+    }catch(error){
       changeStateAlert(true);
       
       let message;
@@ -85,16 +89,16 @@ export default function SignIn() {
           console.log(error.code);
           break;
       }
-
       changeAlert({type: 'error', message: message});
     }
   }
   
   return (
-    <>
+    <div style={{position:'relative', overflow:'hidden'}}>
       <TitlePage><h1>Registrar</h1></TitlePage>
       <Container>
         <Container Main>
+          <Figura SignIn><FaUser className='icono'/></Figura>
           <FormGlass Registrar action='' onSubmit={handleSubmit}>
             
             <TextArea
@@ -157,6 +161,8 @@ export default function SignIn() {
           />
         </Container>
       </Container>
-    </>
+    </div>
   )
 }
+
+export default SignIn;

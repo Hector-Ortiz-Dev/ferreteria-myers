@@ -55,11 +55,10 @@ const FooterStyle = styled.div`
     width: 100%;
     margin: 0;
     left: 0;
-    z-index: -1;
   }
   
   #footerTest{
-    background: var(--blue-pigment);
+    background: var(--primary-blue);
     padding: 15px 0 0 0;
     border-radius: 500px 500px 0 0;
   }
@@ -102,7 +101,7 @@ const FooterStyle = styled.div`
   #legal{
     text-align: center;
     color: #EAEAEA;
-    background: var(--alloy-orange);
+    background: var(--primary-orange);
     font-size: 8pt;
     line-height: 1.6em;
     padding: 10px 10px 15px 10px;

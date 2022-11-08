@@ -4,7 +4,7 @@ const Button = styled.button`
     ${props => props.Back && css`
         width: 9rem;
         height: 2.5rem;
-        border: 2px solid #EE7D26;
+        border: 2px solid var(--secondary-orange);
         background: none;
         text-align: center;
         border-radius: 10px;
@@ -17,7 +17,7 @@ const Button = styled.button`
     ${props => props.Accept && css`
         width: 9rem;
         height: 2.5rem;
-        border: 3px solid #EE7D26;
+        border: 3px solid var(--secondary-orange);
         background: #C46820;
         text-align: center;
         border-radius: 10px;
@@ -30,7 +30,7 @@ const Button = styled.button`
     ${props => props.CloseSession && css`
         width: 9rem;
         height: 2.5rem;
-        border: 3px solid #EE7D26;
+        border: 3px solid var(--secondary-orange);
         background: #C46820;
         text-align: center;
         border-radius: 10px;
@@ -43,8 +43,8 @@ const Button = styled.button`
     ${props => props.VerMas && css`
         width: 9rem;
         height: 2.5rem;
-        border: 3px solid var(--princeton-orange);
-        background: var(--alloy-orange);
+        border: 3px solid var(--light-orange);
+        background: var(--primary-orange);
         border-radius: 10px;
         cursor: pointer;
         font-size: 20px;
