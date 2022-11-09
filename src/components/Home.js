@@ -21,7 +21,7 @@ const Home = () =>
           <Figura Bag><FaShoppingBag className='icono'/></Figura>
           {/* Dashboard de Nuevos */}
           <Container DashBoard>
-            <TitlePage Dash>Nuevos Productos</TitlePage>
+            <TitlePage Dash>Nuevos productos</TitlePage>
             
             <>
             {
@@ -31,7 +31,7 @@ const Home = () =>
                   <img height='140px' width='200px' src={product.imagen} alt='product'/>
                   <p>{product.nombre}</p>
                   <p>${product.precio}</p>
-                  <Button VerMas>Ver mas</Button>
+                  <Button VerMas>Ver más</Button>
                 </Container>
                 );
               })
@@ -42,7 +42,7 @@ const Home = () =>
 
           {/* Dashboard de Jardin */}
           <Container DashBoard>
-            <TitlePage Dash>Productos para tu jardin</TitlePage>
+            <TitlePage Dash>Productos para tu jardín</TitlePage>
             
             <>
             {
@@ -52,7 +52,7 @@ const Home = () =>
                   <img height='140px' width='200px' src={product.imagen} alt='product'/>
                   <p>{product.nombre}</p>
                   <p>${product.precio}</p>
-                  <Button VerMas>Ver mas</Button>
+                  <Button VerMas>Ver más</Button>
                 </Container>
                 );
               })
@@ -63,7 +63,7 @@ const Home = () =>
           
           {/* Dashboard de Plomeria */}
           <Container DashBoard>
-            <TitlePage Dash>Productos de plomeria</TitlePage>
+            <TitlePage Dash>Productos de plomería</TitlePage>
             
             <>
             {
@@ -73,7 +73,7 @@ const Home = () =>
                   <img height='140px' width='200px' src={product.imagen} alt='product'/>
                   <p>{product.nombre}</p>
                   <p>${product.precio}</p>
-                  <Button VerMas>Ver mas</Button>
+                  <Button VerMas>Ver más</Button>
                 </Container>
                 );
               })

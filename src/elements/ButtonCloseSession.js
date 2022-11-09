@@ -18,7 +18,7 @@ const ButtonCloseSession = () => {
 
     return (
         <Button CloseSession onClick={closeSession}>
-            Cerrar Sesion
+            Cerrar sesión
         </Button>
     );
 }

@@ -59,7 +59,7 @@ const SignIn = () => {
       changeStateAlert(true);
       changeAlert({
         type: 'error',
-        message: 'Las contrasenas no coinciden.'
+        message: 'Las contraseñas no coinciden.'
       })
       return;
     }
@@ -76,13 +76,13 @@ const SignIn = () => {
       
       switch(error.code){
         case 'auth/invalid-password':
-          message = 'La contrasena debe ser de al menos 6 caracteres';
+          message = 'La contraseña debe ser de al menos 6 caracteres';
           break;
         case 'auth/email-already-in-use':
-          message = 'Ya existe una cuenta con el correo electronico proporcionado';
+          message = 'Ya existe una cuenta con el correo electrónico proporcionado';
           break;
         case 'auth/invalid-email':
-          message = 'El correo electronico no es valido';
+          message = 'El correo electrónico no es válido';
           break;
         default:
           message = 'Hubo un error al intentar crear la cuenta';
@@ -117,7 +117,7 @@ const SignIn = () => {
                 id="formEmail"
                 value={email}
                 onChange={handleChange}
-                placeholder='Correo electronico'
+                placeholder='Correo electrónico'
                 />
             <label className="form-label" htmlFor="formEmail">Correo electrónico</label>
           

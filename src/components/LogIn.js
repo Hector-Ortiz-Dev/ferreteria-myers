@@ -76,11 +76,11 @@ const LogIn = () =>
                 type="email"
                 name="email"
                 id="formUser"
-                placeholder='Correo electronico'
+                placeholder='Correo electrónico'
                 value={email}
                 onChange={handleChange}
                 />
-            <label htmlFor="formUser">Correo electronico</label>
+            <label htmlFor="formUser">Correo electrónico</label>
 
             <TextArea
                 type="password"

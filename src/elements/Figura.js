@@ -18,7 +18,7 @@ const Figura = styled.div`
 
     ${props => props.Tools && css`
         position: absolute;
-        top: 15%;
+        top: 0%;
         left: -25%;
         padding: 90px;
         opacity: 0.8;
@@ -33,7 +33,7 @@ const Figura = styled.div`
 
     ${props => props.Bag && css`
         position: absolute;
-        top: 45%;
+        top: 25%;
         left: 65%;
         padding: 90px;
         opacity: 0.8;

@@ -42,7 +42,7 @@ const Navbar = () =>
         </NavContainer>
         <NavContainer Section Bottom>
           <NavLink to='/'>Inicio</NavLink>
-          <NavLink to='/Categories'>Categorias</NavLink>
+          <NavLink to='/Categories'>Categorías</NavLink>
           <NavLink to='/Contact'>Contacto</NavLink>
           <NavLink to='/About'>Acerca de</NavLink>
         </NavContainer>
