@@ -8,9 +8,11 @@
     --secondary-orange: #d87223;
     --light-orange: #ee7d26;
     --macaroni: #f7be93;
-    --glass-blue: rgba(57,57,147,0.25);
+    --glass-blue: rgba(57,57,147,0.75);
 
-    --primary-blue-t: rgba(57, 57, 147, 0.75)
+    --primary-blue-t: rgba(57, 57, 147, 0.8);
+    --secondary-blue-t: rgba(80, 80, 165, 0.5);
+    --light-blue-t: rgba(160, 160, 209, 0.5);
 }
 
 * {

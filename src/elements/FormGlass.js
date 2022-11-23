@@ -5,7 +5,7 @@ const FormGlass = styled.form`
     padding: 70px 100px 70px 100px;
     border-radius: 30px;
     background-color: var(--primary-blue-t);
-    backdrop-filter: saturate(150%) blur(6px);
+    backdrop-filter: saturate(180%) blur(4px);
     display: flex;
     flex-direction: column;
     gap: 5px;

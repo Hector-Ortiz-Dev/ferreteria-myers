@@ -41,8 +41,8 @@ const Navbar = () =>
           </div>
         </NavContainer>
         <NavContainer Section Bottom>
-          <NavLink to='/'>Inicio</NavLink>
-          <NavLink to='/Categories'>Categorías</NavLink>
+          <NavLink to='/'>Tienda</NavLink>
+          <NavLink to='/Search'>Categorías</NavLink>
           <NavLink to='/Contact'>Contacto</NavLink>
           <NavLink to='/About'>Acerca de</NavLink>
         </NavContainer>
@@ -100,7 +100,6 @@ const Input = styled.input`
     border: 3px solid var(--primary-orange);
     border-right: none;
     padding: 5px;
-    height: 20px;
     border-radius: 5px 0 0 5px;
     outline: none;
     color: var(--primary-blue)

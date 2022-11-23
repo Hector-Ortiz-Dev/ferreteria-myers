@@ -7,6 +7,145 @@ const Container = styled.div`
     color: white;
     justify-content: center;
 
+    ${props => props.Search && css`
+        background-color: var(--secondary-blue-t);
+        border-radius: 15px;
+        padding: 0;
+        box-shadow: 5px 5px 10px var(--primary-blue);
+    `};
+
+    ${props => props.ProductPage && css`
+        background-color: var(--light-blue-t);
+        backdrop-filter: saturate(100%) blur(4px);
+        box-shadow: 5px 5px 10px var(--primary-blue);
+        flex-direction: row;
+        border-radius: 15px;
+        padding: 40px 80px 40px 80px;
+        width: 100%;
+        max-width: 1800px;
+        align-items: center;
+    `}
+
+    ${props => props.Address && css`
+        border-radius: 15px;
+        padding: 10px 80px 10px 80px;
+        //box-shadow: 5px 5px 10px black;
+        flex-direction: column;
+        width: 80%;
+        font-size: 25px;
+        translate: 10%;
+    `};
+
+    ${props => props.Profile && css`
+        border-radius: 15px;
+        padding: 0px 80px 20px 80px;
+        border: 4px solid var(--primary-blue);
+        box-shadow: 5px 5px 10px var(--primary-blue);
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        font-size: 25px;
+        font-weight: bold;
+
+        img{
+            width: 25%;
+            margin: 0 0 25px 0;
+        }
+    }
+    `}
+
+    ${props => props.ProductProfile && css`
+        border-radius: 15px;
+        padding: 0;
+        border: 4px solid var(--primary-blue);
+        align-items: center;
+        flex-direction: row;
+        width: 100%;
+        font-size: 25px;
+        font-weight: normal;
+        justify-content: space-around;
+        background-color: var(--secondary-blue);
+
+        p{
+            flex-grow:0;
+            flex-shrink:1;
+            width: fit-content !important;
+        }
+
+        img{
+            width: 5%;
+            object-fit: cover;
+        }
+    }
+    `}
+
+    ${props => props.Contact && css`
+        background-color: var(--light-blue);
+        border-radius: 15px;
+        padding: 40px 80px 40px 80px;
+        border: 16px solid var(--primary-blue);
+        box-shadow: 5px 5px 10px var(--primary-blue);
+        align-items: center;
+        flex-direction: column;
+        width: 55%;
+        max-width: 1200px;
+
+        img{
+            width: 50%;
+            margin-bottom: 50px;
+            border-radius: 15px;
+            border: 26px solid var(--primary-blue);
+        }
+
+        p{
+            color: var(--primary-blue);
+            font-size: 23px;
+        }
+
+        .text{
+            margin-bottom: 30px;
+        }
+
+        .title{
+            font-weight: bold;
+        }
+
+        .email{
+            font-style: italic;
+        }
+
+        .tel{
+            margin-bottom: 50px;
+
+        }
+    `}
+
+    ${props => props.About && css`
+        background-color: var(--light-blue);
+        border-radius: 15px;
+        flex-direction: column;
+        padding: 40px 80px 40px 80px;
+        width: 70%;
+        max-width: 1200px;
+        align-items: center;
+        border: 16px solid var(--primary-blue);
+        box-shadow: 5px 5px 10px var(--primary-blue);
+
+        img{
+            width: 50%;
+            margin-bottom: 50px;
+            border-radius: 15px;
+            border: 26px solid var(--primary-blue);
+        }
+
+        p{
+            color: var(--primary-blue);
+            font-size: 23px;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+    `}
+
     ${props => props.Main && css`
         width: 80%;
         position: relative;
@@ -16,7 +155,7 @@ const Container = styled.div`
 
     ${props => props.DashBoard && css`
         background-color: var(--glass-blue);
-        backdrop-filter: saturate(150%) blur(6px);
+        backdrop-filter: saturate(180%) blur(6px);
         color: #fff;
         padding: 10px 0 20px 10px;
         border-radius: 15px;
