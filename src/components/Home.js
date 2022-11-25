@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import Container from '../elements/Container'
 import TitlePage from '../elements/TitlePage'
 import {useGetDashGarden, useGetDashPlumbing, useGetDashNews} from '../hooks/useGetProducts'
@@ -31,7 +32,7 @@ const Home = () =>
                   <img height='140px' width='200px' src={product.imagen} alt='product'/>
                   <p>{product.nombre}</p>
                   <p>${product.precio}</p>
-                  <Button VerMas>Ver más</Button>
+                  <Button VerMas><Link to={'/Product/' + product.id}>Ver más</Link></Button>
                 </Container>
                 );
               })
@@ -52,7 +53,7 @@ const Home = () =>
                   <img height='140px' width='200px' src={product.imagen} alt='product'/>
                   <p>{product.nombre}</p>
                   <p>${product.precio}</p>
-                  <Button VerMas>Ver más</Button>
+                  <Button VerMas><Link to={'/Product/' + product.id}>Ver más</Link></Button>
                 </Container>
                 );
               })
@@ -73,7 +74,7 @@ const Home = () =>
                   <img height='140px' width='200px' src={product.imagen} alt='product'/>
                   <p>{product.nombre}</p>
                   <p>${product.precio}</p>
-                  <Button VerMas>Ver más</Button>
+                  <Button VerMas><Link to={'/Product/' + product.id}>Ver más</Link></Button>
                 </Container>
                 );
               })

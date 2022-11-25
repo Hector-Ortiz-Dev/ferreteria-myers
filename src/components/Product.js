@@ -5,20 +5,30 @@ import imgProd from '../images/images.png'
 import styled from 'styled-components'
 import {FaMinus, FaPlus} from 'react-icons/fa'
 import Button from '../elements/Button'
+import {useParams} from 'react-router-dom'
+import { useGetSingleProduct } from '../hooks/useGetProducts'
 
 const Product = () => {
+    //16600270
+    const {id} = useParams();
+    const [product] = useGetSingleProduct(id);
+    console.log(product);
+
     return (
         <>
         <TitlePage><h1>Producto</h1></TitlePage>
         <Container>
             
         <ProductContainer>
-        <div className="single-product">
+        {
+        product.map((producto) => {
+        return(
+        <div className="single-product" key={producto.id}>
             <div className="row">
                 <div className="col-6">
                     <div className="product-image">
                         <div className="product-image-main">
-                            <img src={imgProd} alt="" id="product-main-image"/>
+                            <img src={producto.imagen} alt="" id="product-main-image"/>
                         </div>
                     </div>
                 </div>
@@ -26,15 +36,15 @@ const Product = () => {
                 <div className="col-6">
                     <div className="product">
                         <div className="product-title">
-                            <h2>Half Sleve T-shirt for Men</h2>
+                            <h2>{producto.nombre}</h2>
                         </div>
                         <div className="product-price">
-                            <span className="offer-price">$99.00</span>
+                            <span className="offer-price">${producto.precio}</span>
                         </div>
 
                         <div className="product-details">
                             <h3>Descripción</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos est magnam quibusdam maiores sit perferendis minima cupiditate iusto earum repudiandae maxime vitae nostrum, ea cumque iste ipsa hic commodi tempore.</p>
+                            <p>{producto.descripcion}</p>
                         </div>
                         <span className="divider"></span>
 
@@ -57,6 +67,8 @@ const Product = () => {
                 </div>
             </div>
         </div>
+        );})
+        }
         </ProductContainer>
 
         </Container>

@@ -13,12 +13,14 @@ import Search from './components/Search'
 import Product from './components/Product'
 import Background from './elements/Background'
 import Footer from './elements/Footer';
+import Error404 from './components/Error404';
 
 function App() {
   return (
     <Background tipo = ''>
       <Navbar />
       <Routes>
+          <Route path='*' element={<Error404 />}/>
           <Route path='/' element={<Home />}/>
           <Route path='/LogIn' element={<LogIn />}/>
           <Route path='/SignIn' element={<SignIn />}/>
@@ -27,7 +29,7 @@ function App() {
           <Route path='/Profile' element={<Profile />}/>
           <Route path='/Search' element={<Search />}/>
           <Route path='/Cart' element={<Cart />}/>
-          <Route path='/Product' element={<Product />}/>
+          <Route path='/Product/:id' element={<Product />}/>
       </Routes>
       <Footer />
     </Background>

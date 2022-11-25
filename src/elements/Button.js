@@ -69,6 +69,10 @@ const Button = styled.button`
         font-weight: bold;
     `};
 
+    ${props => props.Big && css`
+        width: 200px;
+    `};
+
     ${props => props.CloseSession && css`
         width: 9rem;
         height: 2.5rem;

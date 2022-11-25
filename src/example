@@ -1,0 +1,61 @@
+/*{
+    miCarrito.map((producto) => (
+        <Pedido key={producto.id}>
+            <PedidoNombre>{producto.nombre_producto}</PedidoNombre>
+            <PedidoPrecio>${producto.precio_producto}</PedidoPrecio>
+            {/* <PedidoPrecio><BtnCantidad>-</BtnCantidad>{producto.cantidad}<BtnCantidad>+</BtnCantidad></PedidoPrecio> /}
+            <ContCantidad>
+                <BtnCantidad onClick={() => restaCarrito(producto)}>-</BtnCantidad>
+                    <PedidoPrecio>{producto.cantidad}</PedidoPrecio>
+                <BtnCantidad onClick={() => sumaCarrito(producto)}>+</BtnCantidad>
+            </ContCantidad>
+            <PedidoPrecio>${producto.cantidad producto.precio_producto}</PedidoPrecio>
+            <PedidoBoton onClick={() => deleteCarrito(producto.id)}><IBorrar /></PedidoBoton>
+        </Pedido>
+    ))
+}
+
+const sumaCarrito = async(producto) => {
+    const documento = doc(db, 'carrito', producto.id);
+
+    producto.cantidad += 1;
+    await updateDoc(documento, producto)
+    // await updateDoc(doc(db, 'carrito', producto.id));
+}
+
+const restaCarrito = async(producto) => {
+    const documento = doc(db, 'carrito', producto.id);
+
+    if(producto.cantidad === 1)
+        return;
+
+    producto.cantidad -= 1;
+    await updateDoc(documento, producto)
+    // await updateDoc(doc(db, 'carrito', producto.id));
+}
+
+const useGetCarritoSession = (id_usuario) => {
+    const [carrito, setCarrito] = useState([]);
+
+    useEffect(() =>{
+        const consulta = query(
+            collection(db, 'carrito'),
+            where('id_usuario', '==', id_usuario),
+            where('pagado', '==', false),
+        );
+
+        const unsuscribe = onSnapshot(consulta, (snapshot) => {
+            setCarrito(snapshot.docs.map((categoria) => {
+                return {...categoria.data(), id: categoria.id}
+            }));
+        });
+
+        return unsuscribe;
+    }, [id_usuario]);
+
+    return [carrito];
+}
+
+import {useState, useEffect} from "react";
+import { db } from "../firebase/firebaseConfig";
+import { collection, onSnapshot, query, where} from "firebase/firestore";*/

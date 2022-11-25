@@ -1,20 +1,241 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Container from '../elements/Container'
 import TitlePage from '../elements/TitlePage'
 import UserIcon from '../images/user.png'
 import { useAuth } from './../contexts/AuthContext'
 import styled from 'styled-components'
 import {FaUser, FaUserCog, FaHouseUser, FaShoppingBag} from 'react-icons/fa';
+import {auth} from './../firebase/firebaseConfig'
 import Button from '../elements/Button'
+import Alert from './../elements/Alert'
+import {updatePassword, updateProfile} from 'firebase/auth'
+import useGetAddress from '../hooks/useGetAddress'
+import updateAddress from '../hooks/updateAddress'
+import addAddress from '../hooks/addAddress'
 
 const Profile = () => {
     const { user } = useAuth();
-    console.log(user);
 
     const [toggleState, setToggleState] = useState(1);
 
     const toggleTab = (index) => {
         setToggleState(index);
+    };
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    const [alert, changeAlert] = useState('');
+    const [stateAlert, changeStateAlert] = useState(false);
+
+    //-----Datos de usuario-----
+    const [name, changeName] = useState('');
+    const [password, changePassword] = useState('');
+    const [password2, changePassword2] = useState('');
+
+    //-----Datos de direcciones-----
+    const [address] = useGetAddress(user.uid);
+    const [street, changeStreet] = useState('');
+    const [number, changeNumber] = useState('');
+    const [numberInt, changeNumberInt] = useState('');
+    const [colony, changeColony] = useState('');
+    const [zipCode, changeZipCode] = useState('');
+    const [city, changeCity] = useState('');
+    const [state, changeState] = useState('');
+
+    const handleChange = async (e) => {
+        switch(e.target.name){
+            case 'name':
+                changeName(e.target.value);
+                break;
+            case 'password':
+                changePassword(e.target.value);
+                break;
+            case 'password2':
+                changePassword2(e.target.value);
+                break;
+            case 'street':
+                changeStreet(e.target.value);
+                break;
+            case 'number':
+                changeNumber(e.target.value);
+                break;
+            case 'numberInt':
+                changeNumberInt(e.target.value);
+                break;
+            case 'colony':
+                changeColony(e.target.value);
+                break;
+            case 'zipCode':
+                changeZipCode(e.target.value);
+                break;
+            case 'city':
+                changeCity(e.target.value);
+                break;
+            case 'state':
+                changeState(e.target.value);
+                break;
+            default:
+              break;
+        }
+      }
+
+    const handleSubmitName = async (e) => {
+      console.log('Ejecutando Handle Name');
+    
+      e.preventDefault();
+      changeStateAlert(false);
+      changeAlert({});
+
+      if(name === '')
+      {
+          changeStateAlert(true);
+          changeAlert({
+              type: 'error',
+              message: 'Ingresa el nuevo nombre'
+          })
+        return;
+      }
+      try{
+          await updateProfile(auth.currentUser, {displayName: name});
+          changeStateAlert(true);
+          changeAlert({
+              type: 'success',
+              message: 'Nombre actualizado'
+          });
+          await delay(1000);
+          window.location.reload();
+        }catch(error){
+          changeStateAlert(true);
+          changeAlert({type: 'error', message: error});
+        }
+      };
+
+    const handleSubmitPassword = async (e) => {
+        console.log('Ejecutando Handle Password');
+        
+        e.preventDefault();
+        changeStateAlert(false);
+        changeAlert({});
+    
+        if(password === '' || password2 === '')
+        {
+            changeStateAlert(true);
+            changeAlert({
+                type: 'error',
+                message: 'Ingresa la nueva contraseña'
+            })
+          return;
+        }
+        if(password !== password2)
+        {
+            changeStateAlert(true);
+            changeAlert({
+                type: 'error',
+                message: 'Las contraseñas no coinciden.'
+            })
+          return;
+        }
+            await updatePassword(auth.currentUser, password).then(() => {
+            changeStateAlert(true);
+            changeAlert({
+                type: 'success',
+                message: 'Contraseña actualizada'
+            });
+            delay(1000);
+            window.location.reload();
+            }).catch((error) => {
+            changeStateAlert(true);
+
+            let message;
+
+            switch(error.code){
+                case 'auth/invalid-password':
+                    message = 'La contraseña debe ser de al menos 6 caracteres';
+                    break;
+                default:
+                    message = 'Hubo un error al intentar crear la cuenta';
+                    console.log(error.code);
+                    break;
+            }
+            changeAlert({type: 'error', message: error});
+          });
+        };
+
+    const handleSubmitAddress = async (e) => {
+        e.preventDefault();
+        console.log('Ejecutando Handle Address');
+        changeStateAlert(false);
+        changeAlert({});
+
+        if(street == '' ||
+           number == '' ||
+           colony == '' ||
+           zipCode == '' ||
+           city == '' ||
+           state == ''
+        ){ //Espacios vacios
+            console.log('Espacios sin llenar');
+            changeStateAlert(true);
+            changeAlert({
+              type: 'error',
+              message: 'Ingresa todos los datos requeridos'
+            })
+            return;
+        }
+        else{
+            if(address.length != 0) //Si ya existe una direccion
+            {
+                updateAddress(
+                    address[0].id,
+                    street,
+                    number,
+                    numberInt,
+                    colony,
+                    zipCode,
+                    city,
+                    state);
+
+                changeStreet('');
+                changeNumber('');
+                changeNumberInt('');
+                changeColony('');
+                changeZipCode('');
+                changeCity('');
+                changeState('');
+
+                changeStateAlert(true);
+                changeAlert({
+                    type: 'success',
+                    message: 'Dirección actualizada'
+                });
+            }
+            else //Si no existe una direccion
+            {
+                addAddress(
+                    user.uid,
+                    street,
+                    number,
+                    numberInt,
+                    colony,
+                    zipCode,
+                    city,
+                    state);
+
+                changeStreet('');
+                changeNumber('');
+                changeNumberInt('');
+                changeColony('');
+                changeZipCode('');
+                changeCity('');
+                changeState('');
+
+                changeStateAlert(true);
+                changeAlert({
+                    type: 'success',
+                    message: 'Dirección agregada'
+                });
+            }
+        }
     };
 
     return (
@@ -59,10 +280,38 @@ const Profile = () => {
                     <h2><FaUserCog/> Editar datos de usuario</h2>
                     <hr />
                     <Container Profile>
-                        Nombre de usuario <input type={'text'}></input>
-                        Nueva contraseña <input type={'password'}></input>
-                        Confirmar nueva contraseña <input type={'password'}></input>
-                        <Button Accept>Guardar datos</Button>
+                        <form action='' onSubmit={handleSubmitName}>
+                        Nombre de usuario
+                        <input
+                            type={'text'}
+                            name={'name'}
+                            id={'editName'}
+                            value={name}
+                            onChange={handleChange}
+                            placeholder='Nuevo nombre de usuario'
+                            />
+                        <Button Accept Big type='submit' style={{marginBottom: '50px'}}>Cambiar nombre</Button>
+                        </form>
+
+                        <form action='' onSubmit={handleSubmitPassword}>
+                        Nueva contraseña
+                        <input
+                            type={'password'}
+                            name={'password'}
+                            id={'editPassword'}
+                            value={password}
+                            onChange={handleChange}
+                            placeholder='Nueva contraseña'/>
+                        Confirmar nueva contraseña
+                        <input
+                            type={'password'}
+                            name={'password2'}
+                            id={'editPassword2'}
+                            value={password2}
+                            onChange={handleChange}
+                            placeholder='Repetir nueva contraseña'/>
+                        <Button Accept Big type='submit'>Cambiar contraseña</Button>
+                        </form>
                     </Container>
 
                 </div>
@@ -73,26 +322,88 @@ const Profile = () => {
                     <h2><FaHouseUser/> Dirección</h2>
                     <hr />
                     <Container Address>
-                        <TextAddress>Calle: Desierto de Sahara</TextAddress>
-                        <TextAddress>Número: 400</TextAddress>
-                        <TextAddress>Número interior: ----</TextAddress>
-                        <TextAddress>Colonia: Colonial Huinala</TextAddress>
-                        <TextAddress>Código postal: 66640</TextAddress>
-                        <TextAddress>Ciudad: Apodaca</TextAddress>
-                        <TextAddress>Estado: Nuevo León</TextAddress>
+                        {
+                        address.length != 0
+                        ?
+                        address.map((direccion) => {
+                        return(
+                        <div key={direccion.id}>
+                        <TextAddress>Calle: {direccion.calle}</TextAddress>
+                        <TextAddress>Número: {direccion.numero}</TextAddress>
+                        <TextAddress>Número interior: {direccion.numeroInt}</TextAddress>
+                        <TextAddress>Colonia: {direccion.colonia}</TextAddress>
+                        <TextAddress>Código postal: {direccion.codigo}</TextAddress>
+                        <TextAddress>Ciudad: {direccion.ciudad}</TextAddress>
+                        <TextAddress>Estado: {direccion.estado}</TextAddress>
+                        </div>
+                        );})
+                        :
+                        <div><TextAddress>No hay ninguna dirección guardada</TextAddress></div>
+                        }
                     </Container>
 
                     <h2><FaHouseUser/> Cambiar dirección</h2>
                     <hr />
                     <Container Address>
-                        Calle <input type={'text'} required></input>
-                        Número <input type={'text'} required></input>
-                        Número interior <input type={'text'}></input>
-                        Colonia <input type={'text'} required></input>
-                        Código postal <input type={'number'} required></input>
-                        Ciudad <input type={'text'} required></input>
-                        Estado <input type={'text'} required></input>
-                        <Button Accept>Guardar datos</Button>
+                       <form action='' onSubmit={handleSubmitAddress}>
+                        Calle*
+                        <input
+                            type='text'
+                            name='street'
+                            id='formStreet'
+                            value={street}
+                            onChange={handleChange}
+                            placeholder='Calle'/>
+                        Número exterior*
+                        <input
+                            type='text'
+                            name='number'
+                            id='formNumber'
+                            value={number}
+                            onChange={handleChange}
+                            placeholder='Número exterior'/>
+                        Número interior
+                        <input
+                            type='text'
+                            name='numberInt'
+                            id='formNumberInt'
+                            value={numberInt}
+                            onChange={handleChange}
+                            placeholder='Número interior'/>
+                        Colonia*
+                        <input
+                            type='text'
+                            name='colony'
+                            id='formColony'
+                            value={colony}
+                            onChange={handleChange}
+                            placeholder='Colonia'/>
+                        Código postal*
+                        <input
+                            type='number'
+                            name='zipCode'
+                            id='formZipCode'
+                            value={zipCode}
+                            onChange={handleChange}
+                            placeholder='Código Postal'/>
+                        Ciudad*
+                        <input
+                            type='text'
+                            name='city'
+                            id='formCity'
+                            value={city}
+                            onChange={handleChange}
+                            placeholder='Ciudad'/>
+                        Estado*
+                        <input
+                            type='text'
+                            name='state'
+                            id='formState'
+                            value={state}
+                            onChange={handleChange}
+                            placeholder='Estado'/>
+                        <Button Accept Big type='submit'>Guardar dirección</Button>
+                        </form>
                     </Container>
                 </div>
 
@@ -109,19 +420,19 @@ const Profile = () => {
                     </Container>
 
                     <Container ProductProfile>
-                        <img src={UserIcon}/>
+                        <img src={UserIcon} alt=''/>
                         <p>Nombre del producto</p>
                         <p>Cantidad: 2</p>
                         <p>$928.19</p>
                     </Container>
                     <Container ProductProfile>
-                        <img src={UserIcon}/>
+                        <img src={UserIcon} alt=''/>
                         <p>Nombre del producto Nombre del producto</p>
                         <p>Cantidad: 2</p>
                         <p>$928.19</p>
                     </Container>
                     <Container ProductProfile>
-                        <img src={UserIcon}/>
+                        <img src={UserIcon} alt=''/>
                         <p>Nombre del producto</p>
                         <p>Cantidad: 2</p>
                         <p>$928.19</p>
@@ -134,19 +445,19 @@ const Profile = () => {
                     </Container>
 
                     <Container ProductProfile>
-                        <img src={UserIcon}/>
+                        <img src={UserIcon} alt=''/>
                         <p>Nombre del producto</p>
                         <p>Cantidad: 2</p>
                         <p>$928.19</p>
                     </Container>
                     <Container ProductProfile>
-                        <img src={UserIcon}/>
+                        <img src={UserIcon} alt=''/>
                         <p>Nombre del producto Nombre del producto</p>
                         <p>Cantidad: 2</p>
                         <p>$928.19</p>
                     </Container>
                     <Container ProductProfile>
-                        <img src={UserIcon}/>
+                        <img src={UserIcon} alt=''/>
                         <p>Nombre del producto</p>
                         <p>Cantidad: 2</p>
                         <p>$928.19</p>
@@ -154,6 +465,13 @@ const Profile = () => {
 
                 </div>
             </div>
+
+        <Alert
+        type={alert.type}
+        message={alert.message}
+        stateAlert={stateAlert}
+        changeStateAlert={changeStateAlert}/>
+
         </TabsContainer>
         </Container>
         </Container>

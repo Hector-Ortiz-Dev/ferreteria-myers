@@ -7,6 +7,10 @@ const Container = styled.div`
     color: white;
     justify-content: center;
 
+    ${props => props.NoPadding && css`
+        padding: 0;
+    `}
+
     ${props => props.Search && css`
         background-color: var(--secondary-blue-t);
         border-radius: 15px;
@@ -34,6 +38,13 @@ const Container = styled.div`
         width: 80%;
         font-size: 25px;
         translate: 10%;
+
+        form{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+        }
     `};
 
     ${props => props.Profile && css`
@@ -50,6 +61,13 @@ const Container = styled.div`
         img{
             width: 25%;
             margin: 0 0 25px 0;
+        }
+
+        form{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
         }
     }
     `}
@@ -190,6 +208,11 @@ const Container = styled.div`
             white-space: nowrap;
             overflow: hidden;
             width: 100%;
+        }
+
+        a{
+            text-decoration: none;
+            color: white;
         }
     `}
 `;
