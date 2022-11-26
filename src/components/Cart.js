@@ -25,7 +25,7 @@ const Cart = () => {
     const [stateAlert, changeStateAlert] = useState(false);
     const [address] = useGetAddress(user.uid);
 
-    const [misProductos] = useGetMisProductos(user.uid);
+    const [misProductos] = useGetMisProductos(user);
     const [cartPay, changeCartPay] = useState(false);
 
     let total = 0;
@@ -67,7 +67,6 @@ const Cart = () => {
 
         if(address.length !== 0 ){
             //console.log('Tiene una direccion');
-
             changeCartPay(true);
 
             //Compra creada y id obtenido

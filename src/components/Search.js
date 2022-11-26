@@ -1,46 +1,84 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Container from '../elements/Container'
 import TitlePage from '../elements/TitlePage'
 import styled from 'styled-components'
-import imgProd from '../images/images.png'
+import {useParams} from 'react-router-dom'
 import Button from '../elements/Button'
+import { useGetAllProducts } from '../hooks/useGetProducts'
+import { Link } from 'react-router-dom'
 
 const Search = () => {
-    return (
-        <>
-        <TitlePage><h1>Productos</h1></TitlePage>
-        
-        <Container>
-            <Container Main Search>
-            <Navigate>
-              <div className="sort">
-                <label>Categorías: </label>
-                <div className="collection-sort">
-                  <select>
-                    <option value="/">Todas las categorías</option>
-                  </select> 
-                </div>
-              </div>
-              <p className='searchText'>Búsqueda: </p>
-            </Navigate>
+  const [categorias, changeCategorias] = useState('/');
+  const [products] = useGetAllProducts();
+  const {search} = useParams();
 
-            <Section>
-                <div className="product-card">
-                  <div className="product-image">
-                    <img src={imgProd} alt=''/>
+  console.log(categorias);
+
+  const handleChange = async (e) => {
+    switch(e.target.name){
+      case 'categorias':
+        changeCategorias(e.target.value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  return (
+      <>
+      <TitlePage><h1>Productos</h1></TitlePage>
+      
+      <Container>
+          <Container Main Search>
+          <Navigate>
+            <div className="sort">
+              <label>Categorías: </label>
+              <div className="collection-sort">
+                <select
+                  name='categorias'
+                  onChange={handleChange}
+                >
+                  <option value="/">Todas las categorías</option>
+                  <option value="Jardin">Jardín</option>
+                  <option value="Plomeria">Plomería</option>
+                  <option value="Seguridad">Seguridad</option>
+                  <option value="Iluminacion">Iluminación</option>
+                  <option value="Limpieza">Limpieza</option>
+                  <option value="Electricidad">Electricidad</option>
+                  <option value="Hogar">Hogar</option>
+                  <option value="Aceites">Aceites</option>
+                  <option value="Carga">Carga</option>
+                  <option value="Hidraulico">Hidráulico</option>
+                  <option value="Soldadura">Soldadura</option>
+                </select> 
+              </div>
+            </div>
+            <p className='searchText'>Búsqueda: {search}</p>
+          </Navigate>
+
+          {
+          products.map((product) => (
+            (((product.nombre.includes(search) || search ===' ')) &&
+              (product.categoria === categorias || categorias === '/')) &&
+
+              <Section key={product.id}>
+                  <div className="product-card">
+                    <div className="product-image">
+                      <img src={product.imagen} alt=''/>
+                    </div>
+                    <div className="product-info">
+                      <p className='name'>{product.nombre}</p>
+                      <p className='price'>${(product.precio).toFixed(2)}</p>
+                      <Button VerMas><Link to={'/Product/' + product.id}>Ver más</Link></Button>
+                    </div>
                   </div>
-                  <div className="product-info">
-                    <p className='name'>Winter Jacket Supreme Marca Premium Color Red</p>
-                    <p className='price'>$99.99</p>
-                    <Button VerMas>Ver más</Button>
-                    <Button AlCarrito>Añadir al carrito</Button>
-                  </div>
-                </div>
-            </Section>
-            </Container>
-        </Container>
-        </>
-    );
+              </Section>
+            ))
+          }
+          </Container>
+      </Container>
+      </>
+  );
 }
  
 export default Search;
@@ -97,18 +135,30 @@ const Section = styled.section`
     display: flex;
     flex-wrap: wrap;
     background-color: var(--primary-blue-t);
-    border: none;
+    border: 6px solid var(--light-blue);
     width:20%;
     justify-content: center;
     align-content: center;
     text-align: center;
     border-radius: 15px;
     overflow: hidden;
+    margin: 4px;
+
+    a{
+      text-decoration:none;
+      color:white;
+    }
+
+    img{
+      width: 90%;
+      object-fit: cover;
+    }
 
     .name{
         margin: 18px 0 7px 0;
         font-size: 20px;
         width: 100%;
+        overflow:hidden;
         font-weight: bold;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -129,6 +179,7 @@ const Section = styled.section`
         flex-basis: 16%;
         flex-direction: column;
         display: flex;
+        width: 100%;
     }
 
     .product-image img {
@@ -140,5 +191,6 @@ const Section = styled.section`
 
     .product-info {
       margin-top: auto;
+      width:100%;
     }
 `;

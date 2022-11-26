@@ -1,61 +1,54 @@
-/*{
-    miCarrito.map((producto) => (
-        <Pedido key={producto.id}>
-            <PedidoNombre>{producto.nombre_producto}</PedidoNombre>
-            <PedidoPrecio>${producto.precio_producto}</PedidoPrecio>
-            {/* <PedidoPrecio><BtnCantidad>-</BtnCantidad>{producto.cantidad}<BtnCantidad>+</BtnCantidad></PedidoPrecio> /}
-            <ContCantidad>
-                <BtnCantidad onClick={() => restaCarrito(producto)}>-</BtnCantidad>
-                    <PedidoPrecio>{producto.cantidad}</PedidoPrecio>
-                <BtnCantidad onClick={() => sumaCarrito(producto)}>+</BtnCantidad>
-            </ContCantidad>
-            <PedidoPrecio>${producto.cantidad producto.precio_producto}</PedidoPrecio>
-            <PedidoBoton onClick={() => deleteCarrito(producto.id)}><IBorrar /></PedidoBoton>
-        </Pedido>
+/*
+{
+    productos.map((producto) => (
+        (((producto.nombre.includes(buscar.toUpperCase()) || buscar === '')) &&
+            (producto.categoria === categoria || categoria === 'Todo') &&
+            (producto.precio >= min && producto.precio <= max)) &&
+        <Card to={/producto/${producto.id}} key={producto.id}>
+            <CardImagen>
+                <Img src={producto.imagen} alt="" />
+            </CardImagen>
+            <CardProducto>
+                <Descripcion>{producto.nombre}</Descripcion>
+                <Precio>${producto.precio}</Precio>
+            </CardProducto>
+        </Card>
     ))
 }
 
-const sumaCarrito = async(producto) => {
-    const documento = doc(db, 'carrito', producto.id);
+<Combo 
+    name="categoria" 
+    value={categoria}
+    onChange={handleChange}>
+    <option value="Todo">Todo</option>
+    {
+        categorias.map((cat) => (
+            <option value={cat.nombre} key={cat.id}>{cat.nombre}</option>
+        ))
+    }
+</Combo>
 
-    producto.cantidad += 1;
-    await updateDoc(documento, producto)
-    // await updateDoc(doc(db, 'carrito', producto.id));
-}
+const handleChange = (e) =>{ //Funcion para la escritura dentro de los inputs.
+        //console.log(e.target.name);
+        switch (e.target.name){
+            case 'buscar':
+                setBuscar(e.target.value);
+                break;
 
-const restaCarrito = async(producto) => {
-    const documento = doc(db, 'carrito', producto.id);
+            case 'categoria':
+                setCategoria(e.target.value);
+                break;
 
-    if(producto.cantidad === 1)
-        return;
+            case 'min':
+                setMin(e.target.value);
+                break;
 
-    producto.cantidad -= 1;
-    await updateDoc(documento, producto)
-    // await updateDoc(doc(db, 'carrito', producto.id));
-}
+            case 'max':
+                setMax(e.target.value);
+                break;
 
-const useGetCarritoSession = (id_usuario) => {
-    const [carrito, setCarrito] = useState([]);
-
-    useEffect(() =>{
-        const consulta = query(
-            collection(db, 'carrito'),
-            where('id_usuario', '==', id_usuario),
-            where('pagado', '==', false),
-        );
-
-        const unsuscribe = onSnapshot(consulta, (snapshot) => {
-            setCarrito(snapshot.docs.map((categoria) => {
-                return {...categoria.data(), id: categoria.id}
-            }));
-        });
-
-        return unsuscribe;
-    }, [id_usuario]);
-
-    return [carrito];
-}
-
-import {useState, useEffect} from "react";
-import { db } from "../firebase/firebaseConfig";
-import { collection, onSnapshot, query, where} from "firebase/firestore";*/
+            default:
+                break;
+        }
+    }
+*/

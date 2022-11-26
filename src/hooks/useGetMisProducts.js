@@ -2,13 +2,15 @@ import {useState, useEffect} from 'react'
 import { db } from '../firebase/firebaseConfig';
 import { collection, onSnapshot, query, where, limit, orderBy, connectFirestoreEmulator } from 'firebase/firestore';
 
-const useGetMisProductos = (id_usuario) => {
+const useGetMisProductos = (user) => {
     const [products, changeProducts] = useState([]);
 
     useEffect(() => {
+        if (user != null)
+        {
         const consult = query(
             collection(db, 'misProductos'),
-            where('usuario', '==', id_usuario),
+            where('usuario', '==', user.uid),
             where('pagado', '==', false)
         );
 
@@ -19,7 +21,8 @@ const useGetMisProductos = (id_usuario) => {
         });
         
         return unsuscribe;
-    }, [id_usuario]);
+        }
+    }, [user]);
 
     //console.log(products);
 

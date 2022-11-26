@@ -27,21 +27,6 @@ const Product = () => {
     const [alert, changeAlert] = useState('');
     const [stateAlert, changeStateAlert] = useState(false);
 
-    const handleChange = async (e) => {
-        switch(e.target.name){
-            case 'quantity':
-                if(e.target.value <= 0)
-                    changeAmount(1);
-                else if(e.target.value >= 100)
-                    changeAmount(100);
-                else
-                    changeAmount(e.target.value);
-                break;
-            default:
-              break;
-        }
-      };
-
     const plusAmount = () => {
         changeAmount(amount + 1);
     };
@@ -56,16 +41,27 @@ const Product = () => {
         //console.log('Deploy addToCart');
         e.preventDefault();
 
+        if (user != null)
+        {
         changeStateAlert(false);
         changeAlert({});
 
         addMisProductos(user.uid, product[0], amount);
 
         changeStateAlert(true);
+        changeAlert({
+            type: 'success',
+            message: 'Producto agregado al carrito'
+        });
+        } else {
+            changeStateAlert(false);
+            changeAlert({});
+            changeStateAlert(true);
             changeAlert({
-                type: 'success',
-                message: 'Producto agregado al carrito'
+                type: 'error',
+                message: 'Necesitas iniciar sesión'
             });
+        }
     };
 
     return (
@@ -110,7 +106,7 @@ const Product = () => {
                             </Button>
 
                             <input type='number' name='quantity' value={amount}
-                              className="quantity" onChange={handleChange} style={{width: '50px'}} />
+                              className="quantity" style={{width: '50px'}} />
 
                             <Button PlusMinus type='button' onClick={()=>plusAmount()}>
                               <FaPlus/>

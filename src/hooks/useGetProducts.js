@@ -2,6 +2,26 @@ import {useState, useEffect} from 'react'
 import { db } from '../firebase/firebaseConfig';
 import { collection, onSnapshot, query, where, limit, orderBy } from 'firebase/firestore';
 
+const useGetAllProducts = () => {
+    const [products, changeProducts] = useState([]);
+
+    useEffect(() => {
+        const consult = query(
+            collection(db, 'productos')
+        );
+
+        const unsuscribe = onSnapshot(consult, (snapshot) => {
+            changeProducts(snapshot.docs.map((producto) => {
+                return {...producto.data(), id: producto.id}
+            }));
+        });
+        
+        return unsuscribe;
+    }, []);
+
+    return [products];
+}
+
 const useGetSingleProduct = (producto_id) => {
     //console.log('Deploy useGetSingleProduct id: ' + producto_id);
     const [products, changeProducts] = useState([]);
@@ -90,4 +110,8 @@ const useGetDashNews = () => {
     return [products];
 }
  
-export {useGetDashGarden, useGetDashPlumbing, useGetDashNews, useGetSingleProduct};
+export {useGetDashGarden,
+    useGetDashPlumbing,
+    useGetDashNews,
+    useGetSingleProduct,
+    useGetAllProducts};

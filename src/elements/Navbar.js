@@ -1,24 +1,40 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useAuth } from './../contexts/AuthContext'
 import logo from '../images/logo.png'
 import styled, {css} from 'styled-components'
 import {NavLink} from 'react-router-dom'
 import ButtonCloseSession from './ButtonCloseSession'
 import { useGetMisProductos } from '../hooks/useGetMisProducts'
+import { Link } from 'react-router-dom'
 
 import { FaUser, FaShoppingCart } from 'react-icons/fa';
 
 const Navbar = () =>
 {
+  const [search, changeSearch] = useState(' ');
   const {user} = useAuth();
   //console.log(user);
 
   let cantidadProd = 0;
-  const [misProductos] = useGetMisProductos(user.uid);
 
-  misProductos.map((producto) => {
-    cantidadProd = producto.cantidad + cantidadProd;
-  });
+  const [misProductos] = useGetMisProductos(user);
+
+  if (user != null)
+  {
+    misProductos.map((producto) => {
+      cantidadProd = producto.cantidad + cantidadProd;
+    });
+  }
+
+  const handleChange = async (e) => {
+    switch(e.target.name){
+        case 'search':
+          changeSearch(e.target.value);
+          break;
+        default:
+          break;
+    }
+  };
 
   return (
     <>
@@ -26,9 +42,14 @@ const Navbar = () =>
         <NavContainer Section>
           <NavLink to='/'><img src={logo} alt="GpiiToms" height='60px'/></NavLink>
           <Container Search>
-            <Input search type={'text'} placeholder={'Buscar un articulo'}></Input>
-            <Button search type="submit">
-              <NavLink to='/Search'>Buscar</NavLink>
+            <Input
+              name='search'
+              search type={'text'}
+              onChange={handleChange}
+              placeholder={'Buscar un artículo'}>
+              </Input>
+            <Button search type="button">
+              <Link to={'/Search/' + search}>Buscar</Link>
             </Button>
           </Container>
           <div>
@@ -50,7 +71,7 @@ const Navbar = () =>
         </NavContainer>
         <NavContainer Section Bottom>
           <NavLink to='/'>Tienda</NavLink>
-          <NavLink to='/Search'>Categorías</NavLink>
+          <NavLink to='/Search/ '>Categorías</NavLink>
           <NavLink to='/Contact'>Contacto</NavLink>
           <NavLink to='/About'>Acerca de</NavLink>
         </NavContainer>
@@ -105,6 +126,8 @@ const Container = styled.div`
 const Input = styled.input`
   ${props => props.search && css`
     width: 100%;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 16px;
     border: 3px solid var(--primary-orange);
     border-right: none;
     padding: 5px;
@@ -113,6 +136,7 @@ const Input = styled.input`
     color: var(--primary-blue)
     `}
 `
+
 const Button = styled.button`
   a{
     color: white;
