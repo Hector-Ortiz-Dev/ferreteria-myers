@@ -12,11 +12,21 @@ import {updatePassword, updateProfile} from 'firebase/auth'
 import useGetAddress from '../hooks/useGetAddress'
 import updateAddress from '../hooks/updateAddress'
 import addAddress from '../hooks/addAddress'
+import useGetCompras from '../hooks/useGetCompras'
+import {format, fromUnixTime} from 'date-fns'
+import {es} from 'date-fns/locale'
+import { useGetMisProductosComprados } from '../hooks/useGetMisProducts'
+import {useNavigate} from 'react-router-dom'
 
 const Profile = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     const [toggleState, setToggleState] = useState(1);
+
+    const formatDate = (date) => {
+        return(format(fromUnixTime(date), "dd 'de' MMMM 'del' yyyy hh:MM:ss", {locale: es}));
+    }
 
     const toggleTab = (index) => {
         setToggleState(index);
@@ -41,6 +51,10 @@ const Profile = () => {
     const [zipCode, changeZipCode] = useState('');
     const [city, changeCity] = useState('');
     const [state, changeState] = useState('');
+
+    //-----Datos de compras-----
+    const [compras] = useGetCompras(user);
+    const [misProductos] = useGetMisProductosComprados(user);
 
     const handleChange = async (e) => {
         switch(e.target.name){
@@ -102,8 +116,9 @@ const Profile = () => {
               type: 'success',
               message: 'Nombre actualizado'
           });
-          await delay(1000);
-          window.location.reload();
+            await delay(1000);
+            window.location.reload();
+            navigate('/Profile');
         }catch(error){
           changeStateAlert(true);
           changeAlert({type: 'error', message: error});
@@ -412,57 +427,41 @@ const Profile = () => {
                 >
                     <h2><FaShoppingBag/> Compras</h2>
                     <hr />
+                    {
+                    compras.length !== 0
+                    ?
+                        compras.map((compra) => {
+                        return(
+                        <>
+                            <Container Profile style={{marginTop: '60px'}}>
+                                <td>{formatDate(compra.fecha.seconds)}</td>
+                                <td>Total: ${compra.total}</td>
+                                <hr style={{width: '90%'}}/>
+                            </Container>
 
-                    <Container Profile>
-                        <td>25 de noviembre del 2022</td>
-                        <td>Total: $1240.20</td>
-                        <hr style={{width: '90%'}}/>
+                            {
+                            misProductos.map((miProd) => {
+                                return(
+                                    miProd.id_compra === compra.id
+                                    ?
+                                    <Container ProductProfile>
+                                    <img src={miProd.imagen} alt=''/>
+                                    <p>{miProd.nombre}</p>
+                                    <p>Cantidad: {miProd.cantidad}</p>
+                                    <p>${(miProd.precio * miProd.cantidad).toFixed(2)}</p>
+                                    </Container>
+                                    :
+                                    <></>
+                                )
+                            })
+                            }
+                        </>)
+                        })
+                    :
+                    <Container Profile style={{marginTop: '60px'}}>
+                        <p>Compras no realizadas</p>
                     </Container>
-
-                    <Container ProductProfile>
-                        <img src={UserIcon} alt=''/>
-                        <p>Nombre del producto</p>
-                        <p>Cantidad: 2</p>
-                        <p>$928.19</p>
-                    </Container>
-                    <Container ProductProfile>
-                        <img src={UserIcon} alt=''/>
-                        <p>Nombre del producto Nombre del producto</p>
-                        <p>Cantidad: 2</p>
-                        <p>$928.19</p>
-                    </Container>
-                    <Container ProductProfile>
-                        <img src={UserIcon} alt=''/>
-                        <p>Nombre del producto</p>
-                        <p>Cantidad: 2</p>
-                        <p>$928.19</p>
-                    </Container>
-
-                    <Container Profile>
-                        <td>25 de noviembre del 2022</td>
-                        <td>Total: $1240.20</td>
-                        <hr style={{width: '90%'}}/>
-                    </Container>
-
-                    <Container ProductProfile>
-                        <img src={UserIcon} alt=''/>
-                        <p>Nombre del producto</p>
-                        <p>Cantidad: 2</p>
-                        <p>$928.19</p>
-                    </Container>
-                    <Container ProductProfile>
-                        <img src={UserIcon} alt=''/>
-                        <p>Nombre del producto Nombre del producto</p>
-                        <p>Cantidad: 2</p>
-                        <p>$928.19</p>
-                    </Container>
-                    <Container ProductProfile>
-                        <img src={UserIcon} alt=''/>
-                        <p>Nombre del producto</p>
-                        <p>Cantidad: 2</p>
-                        <p>$928.19</p>
-                    </Container>
-
+                    }
                 </div>
             </div>
 

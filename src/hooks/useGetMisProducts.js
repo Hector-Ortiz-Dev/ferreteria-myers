@@ -29,4 +29,28 @@ const useGetMisProductos = (user) => {
     return [products];
 }
 
-export { useGetMisProductos };
+const useGetMisProductosComprados = (user) => {
+    const [products, changeProducts] = useState([]);
+
+    useEffect(() => {
+        const consult = query(
+            collection(db, 'misProductos'),
+            where('usuario', '==', user.uid),
+            where('pagado', '==', true)
+        );
+
+        const unsuscribe = onSnapshot(consult, (snapshot) => {
+            changeProducts(snapshot.docs.map((producto) => {
+                return {...producto.data(), id: producto.id}
+            }));
+        });
+        
+        return unsuscribe;
+    }, []);
+
+    //console.log(products);
+
+    return [products];
+}
+
+export { useGetMisProductos, useGetMisProductosComprados };

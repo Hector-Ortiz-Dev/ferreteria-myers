@@ -70,7 +70,7 @@ const Cart = () => {
             changeCartPay(true);
 
             //Compra creada y id obtenido
-            const id_compra = await addCompra(total);
+            const id_compra = await addCompra(total, user.uid);
             
             misProductos.map((producto) => {
             //console.log(producto.nombre);
