@@ -2,7 +2,7 @@ import { addDoc, collection } from "firebase/firestore"
 import { db } from '../firebase/firebaseConfig';
 
 const addMisProductos = (id_usuario, producto, cantidad) => {
-    console.log('Deploy addMisProductos');
+    //console.log('Deploy addMisProductos');
 
     try{
         addDoc(collection(db, 'misProductos'),{
@@ -15,7 +15,7 @@ const addMisProductos = (id_usuario, producto, cantidad) => {
         pagado: false,
         precio: producto.precio
     });
-    console.log('Producto agregado al carrito');
+    //console.log('Producto agregado al carrito');
     }
     catch(e){
         console.log(e);

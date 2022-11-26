@@ -53,7 +53,7 @@ const Product = () => {
     };
 
     const addToCart = (e) => {
-        console.log('Deploy addToCart');
+        //console.log('Deploy addToCart');
         e.preventDefault();
 
         changeStateAlert(false);

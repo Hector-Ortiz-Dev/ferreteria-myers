@@ -10,7 +10,7 @@ const updateAmount = async (id_MiProducto, amount) => {
 };
 
 const deleteMiProducto = async (id_MiProducto) => {
-    console.log('Deploy deleteMiProducto ' + id_MiProducto);
+    //console.log('Deploy deleteMiProducto ' + id_MiProducto);
 
     try{
     await deleteDoc(doc(db, 'misProductos', id_MiProducto));
@@ -19,4 +19,12 @@ const deleteMiProducto = async (id_MiProducto) => {
     }
 };
 
-export { updateAmount, deleteMiProducto };
+const buyMisProductos = async (id_miProducto, id_compra) => {
+    //console.log('Deploy buyMisProductos');
+    await updateDoc(doc(db, 'misProductos', id_miProducto),{
+        id_compra: id_compra,
+        pagado: true
+    });
+};
+
+export { updateAmount, deleteMiProducto, buyMisProductos };

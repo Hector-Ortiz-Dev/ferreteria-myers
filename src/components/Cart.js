@@ -3,17 +3,18 @@ import Container from '../elements/Container'
 import TitlePage from '../elements/TitlePage'
 import Figura from '../elements/Figura'
 import { FaShoppingCart } from 'react-icons/fa';
-import styled from 'styled-components'
+import styled, {css} from 'styled-components'
 import Button from '../elements/Button'
 import {FaMinus, FaPlus, FaTrashAlt} from 'react-icons/fa'
 import { useAuth } from './../contexts/AuthContext'
 import {useNavigate} from 'react-router-dom'
 import Alert from './../elements/Alert'
 import CartEmpty from './../images/cart-empty.png'
+import Truck from './../images/truck.png'
 
 import useGetAddress from '../hooks/useGetAddress'
 import { useGetMisProductos } from '../hooks/useGetMisProducts'
-import { deleteMiProducto, updateAmount } from '../hooks/updateMisProducts';
+import { buyMisProductos, deleteMiProducto, updateAmount } from '../hooks/updateMisProducts';
 import addCompra from '../hooks/addCompra';
 
 const Cart = () => {
@@ -25,6 +26,7 @@ const Cart = () => {
     const [address] = useGetAddress(user.uid);
 
     const [misProductos] = useGetMisProductos(user.uid);
+    const [cartPay, changeCartPay] = useState(false);
 
     let total = 0;
     let cantidadProd = 0;
@@ -59,17 +61,24 @@ const Cart = () => {
     };
 
     const Pay = async() => {
-        //user id eDGKWPeBf3dBjGMhqzqtxy7LLNj2
-        console.log('Deploy Pay');
+        //console.log('Deploy Pay');
         changeStateAlert(false);
         changeAlert({});
 
         if(address.length !== 0 ){
-            console.log('Tiene una direccion');
+            //console.log('Tiene una direccion');
+
+            changeCartPay(true);
 
             //Compra creada y id obtenido
-            //const id_compra = await addCompra(total);
+            const id_compra = await addCompra(total);
+            
+            misProductos.map((producto) => {
+            //console.log(producto.nombre);
 
+            //Carrito -> Compra
+            buyMisProductos(producto.id, id_compra);
+            });
         }
         else{
             console.log('No hay direccion');
@@ -89,57 +98,69 @@ const Cart = () => {
         <Container>
             <Container Main>
             {
-            misProductos.length !== 0
+            cartPay === false
             ?
-            <CartContainer>
-                {
-                misProductos.map((producto) => {
-                    total += producto.precio * producto.cantidad;
-                    cantidadProd = producto.cantidad + cantidadProd;
+                misProductos.length !== 0
+                ?
+                <CartContainer>
+                    {
+                    misProductos.map((producto) => {
+                        total += producto.precio * producto.cantidad;
+                        cantidadProd = producto.cantidad + cantidadProd;
 
-                    return(
-                    <div className="Cart-Items" key={producto.id}>
-                        <div className="image-box">
-                            <img src={producto.imagen} className='prod-image' alt=''/>
-                        </div>
+                        return(
+                        <div className="Cart-Items" key={producto.id}>
+                            <div className="image-box">
+                                <img src={producto.imagen} className='prod-image' alt=''/>
+                            </div>
 
-                        <div className="about">
-                            <h1 className="title">{producto.nombre}</h1>
-                            <h3 className="subtitle">Precio: $ {producto.precio}</h3>
-                        </div>
+                            <div className="about">
+                                <h1 className="title">{producto.nombre}</h1>
+                                <h3 className="subtitle">Precio: $ {producto.precio}</h3>
+                            </div>
 
-                        <div className="counter">
-                            <Button PlusMinus onClick={()=>minusAmount(producto)}><FaMinus/></Button>
-                            <input min='1' max='100' type='number' value={producto.cantidad}
-                            className="quantity" name='quantity' onChange={handleAmountChange} style={{width: '50px'}} />
-                            <Button PlusMinus onClick={()=>plusAmount(producto)}><FaPlus/></Button>
-                        </div>
+                            <div className="counter">
+                                <Button PlusMinus onClick={()=>minusAmount(producto)}><FaMinus/></Button>
+                                <input min='1' max='100' type='number' value={producto.cantidad}
+                                className="quantity" name='quantity' onChange={handleAmountChange} style={{width: '50px'}} />
+                                <Button PlusMinus onClick={()=>plusAmount(producto)}><FaPlus/></Button>
+                            </div>
 
-                        <div className="prices">
-                            <div className="amount">${(producto.precio*producto.cantidad).toFixed(2)}</div>
-                            <button className="remove" onClick={()=>deleteProduct(producto.id)}><u><FaTrashAlt/>Eliminar artículo</u></button>
+                            <div className="prices">
+                                <div className="amount">${(producto.precio*producto.cantidad).toFixed(2)}</div>
+                                <button className="remove" onClick={()=>deleteProduct(producto.id)}><u><FaTrashAlt/>Eliminar artículo</u></button>
+                            </div>
                         </div>
+                        )
+                    })
+                    }
+                    <hr/> 
+                    <div className="checkout">
+                        <div className="total">
+                          <div>
+                              <div className="Subtotal">Sub-Total</div>
+                              <div className="items">{cantidadProd} productos</div>
+                          </div>
+
+                          <div className="total-amount">${total = total.toFixed(2)}</div>
+                        </div>
+                        <Button Pagar type='button' onClick={()=>Pay()}>Pagar</Button>
                     </div>
-                    )
-                })
-                }
-                <hr/> 
-                <div className="checkout">
-                    <div className="total">
-                      <div>
-                          <div className="Subtotal">Sub-Total</div>
-                          <div className="items">{cantidadProd} productos</div>
-                      </div>
-                      
-                      <div className="total-amount">${total = total.toFixed(2)}</div>
-                    </div>
-                    <Button Pagar type='button' onClick={()=>Pay()}>Pagar</Button>
-                </div>
-            </CartContainer>
+                </CartContainer>
+                :
+                <CartContainer>
+                    <p>El carrito de compras está vacío</p>
+                    <p><img src={CartEmpty} alt='' style={{width: '50%'}}/></p>
+                </CartContainer>
             :
-            <CartContainer>
-                <p>El carrito de compras está vacío</p>
-                <p><img src={CartEmpty} alt=''/></p>
+            <CartContainer Pay>
+                <p className='payed'>Productos comprados</p>
+                <p><img src={Truck} alt='' style={{width: '50%'}}/></p>
+                <br/>
+                <p className='payed'>Compra en camino a</p>
+                <p>{address[0].calle} {address[0].numero}, {address[0].numeroInt}</p>
+                <p>{address[0].colonia}, {address[0].codigo},</p>
+                <p>{address[0].ciudad}, {address[0].estado}</p>
             </CartContainer>
             }
             </Container>
@@ -167,9 +188,16 @@ const CartContainer = styled.div`
     align-items: center;
     min-height: 277px;
 
+    ${props => props.Pay && css`
+        background-color: #00AD6E;
+    `}
+
     p{
-        font-size: 50px;
+        font-size: 30px;
         text-align: center;
+    }
+    .payed{
+        font-size: 50px;
     }
 
     .Action{

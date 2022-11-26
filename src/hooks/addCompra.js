@@ -6,6 +6,7 @@ const addCompra = async (total) => {
         fecha: serverTimestamp(),
         total: total
     });
+    console.log('Producto actualizado');
     return docRef.id;
 };
 
