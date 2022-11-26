@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Container from '../elements/Container'
 import TitlePage from '../elements/TitlePage'
 import imgProd from '../images/images.png'
@@ -7,12 +7,66 @@ import {FaMinus, FaPlus} from 'react-icons/fa'
 import Button from '../elements/Button'
 import {useParams} from 'react-router-dom'
 import { useGetSingleProduct } from '../hooks/useGetProducts'
+import Alert from './../elements/Alert'
+
+import { async } from '@firebase/util'
+import addMisProductos from '../hooks/addMisProductos'
+import { useAuth } from '../contexts/AuthContext'
 
 const Product = () => {
-    //16600270
     const {id} = useParams();
     const [product] = useGetSingleProduct(id);
-    console.log(product);
+    const {user} = useAuth();
+    //console.log(product[0]);
+
+    //console.log(product);
+    const [amount, changeAmount] = useState(1);
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    const [alert, changeAlert] = useState('');
+    const [stateAlert, changeStateAlert] = useState(false);
+
+    const handleChange = async (e) => {
+        switch(e.target.name){
+            case 'quantity':
+                if(e.target.value <= 0)
+                    changeAmount(1);
+                else if(e.target.value >= 100)
+                    changeAmount(100);
+                else
+                    changeAmount(e.target.value);
+                break;
+            default:
+              break;
+        }
+      };
+
+    const plusAmount = () => {
+        changeAmount(amount + 1);
+    };
+
+    const minusAmount = () => {
+        if(amount === 1)
+            return;
+        changeAmount(amount - 1);
+    };
+
+    const addToCart = (e) => {
+        console.log('Deploy addToCart');
+        e.preventDefault();
+
+        changeStateAlert(false);
+        changeAlert({});
+
+        addMisProductos(user.uid, product[0], amount);
+
+        changeStateAlert(true);
+            changeAlert({
+                type: 'success',
+                message: 'Producto agregado al carrito'
+            });
+    };
 
     return (
         <>
@@ -23,7 +77,8 @@ const Product = () => {
         {
         product.map((producto) => {
         return(
-        <div className="single-product" key={producto.id}>
+        <form className="single-product" key={producto.id}
+            action='' onSubmit={addToCart}>
             <div className="row">
                 <div className="col-6">
                     <div className="product-image">
@@ -39,7 +94,7 @@ const Product = () => {
                             <h2>{producto.nombre}</h2>
                         </div>
                         <div className="product-price">
-                            <span className="offer-price">${producto.precio}</span>
+                            <span className="offer-price">${producto.precio.toFixed(2)}</span>
                         </div>
 
                         <div className="product-details">
@@ -50,26 +105,33 @@ const Product = () => {
 
                         <div className="product-btn-group">
                             
-                            <Button PlusMinus>
+                            <Button PlusMinus type='button' onClick={()=>minusAmount()}>
                               <FaMinus/>
                             </Button>
 
-                            <input min='1' max='100' type='number' defaultValue='1'
-                              className="quantity" style={{width: '50px'}} />
+                            <input type='number' name='quantity' value={amount}
+                              className="quantity" onChange={handleChange} style={{width: '50px'}} />
 
-                            <Button PlusMinus>
+                            <Button PlusMinus type='button' onClick={()=>plusAmount()}>
                               <FaPlus/>
                             </Button>
 
-                            <Button Agregar>Añadir al carrito</Button>
+                            <Button Agregar type='submit'>Añadir al carrito</Button>
+                            
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
         );})
         }
         </ProductContainer>
+
+        <Alert
+        type={alert.type}
+        message={alert.message}
+        stateAlert={stateAlert}
+        changeStateAlert={changeStateAlert}/>
 
         </Container>
         </>

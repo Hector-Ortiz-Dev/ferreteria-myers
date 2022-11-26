@@ -1,56 +1,153 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Container from '../elements/Container'
 import TitlePage from '../elements/TitlePage'
 import Figura from '../elements/Figura'
-import imgProd from '../images/images.png'
+import { FaShoppingCart } from 'react-icons/fa';
 import styled from 'styled-components'
 import Button from '../elements/Button'
 import {FaMinus, FaPlus, FaTrashAlt} from 'react-icons/fa'
+import { useAuth } from './../contexts/AuthContext'
+import {useNavigate} from 'react-router-dom'
+import Alert from './../elements/Alert'
+import CartEmpty from './../images/cart-empty.png'
 
-import { FaShoppingCart } from 'react-icons/fa';
+import useGetAddress from '../hooks/useGetAddress'
+import { useGetMisProductos } from '../hooks/useGetMisProducts'
+import { deleteMiProducto, updateAmount } from '../hooks/updateMisProducts';
+import addCompra from '../hooks/addCompra';
 
 const Cart = () => {
+    const {user} = useAuth();
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    const navigate = useNavigate();
+    const [alert, changeAlert] = useState('');
+    const [stateAlert, changeStateAlert] = useState(false);
+    const [address] = useGetAddress(user.uid);
+
+    const [misProductos] = useGetMisProductos(user.uid);
+
+    let total = 0;
+    let cantidadProd = 0;
+
+    const handleAmountChange = (e) => {
+        console.log(e.target.value);
+    }
+
+    const plusAmount = async(producto) => {
+        //console.log('+ Deploy plusAmount' + producto.id);
+        //console.log('Cantidad: ' + producto.cantidad);
+
+        producto.cantidad += 1;
+        
+        await updateAmount(producto.id, producto.cantidad);
+    };
+
+    const minusAmount = async(producto) => {
+        //console.log('- Deploy minusAmount' + producto.id);
+        //console.log('Cantidad: ' + producto.cantidad);
+
+        if(producto.cantidad === 1)
+            return;
+
+        producto.cantidad -= 1;
+
+        await updateAmount(producto.id, producto.cantidad);
+    };
+
+    const deleteProduct = (id_MiProducto)=> {
+        deleteMiProducto(id_MiProducto);
+    };
+
+    const Pay = async() => {
+        //user id eDGKWPeBf3dBjGMhqzqtxy7LLNj2
+        console.log('Deploy Pay');
+        changeStateAlert(false);
+        changeAlert({});
+
+        if(address.length !== 0 ){
+            console.log('Tiene una direccion');
+
+            //Compra creada y id obtenido
+            //const id_compra = await addCompra(total);
+
+        }
+        else{
+            console.log('No hay direccion');
+            changeStateAlert(true);
+            changeAlert({
+                type: 'error',
+                message: 'Ingresa una dirección en tu perfil para realizar la compra.'
+            })
+            await delay(3000);
+            navigate('/Profile');
+        }
+    };
+    
     return (
         <>
         <TitlePage><h1>Carrito de compras</h1></TitlePage>
         <Container>
             <Container Main>
-                
+            {
+            misProductos.length !== 0
+            ?
             <CartContainer>
-                <div className="Cart-Items">
-                    <div className="image-box">
-                        <img src={imgProd} className='prod-image' alt=''/>
-                    </div>
-                    <div className="about">
-                        <h1 className="title">Apple Juice</h1>
-                        <h3 className="subtitle">$20.00</h3>
-                    </div>
-                    <div className="counter">
-                        <Button PlusMinus><FaMinus/></Button>
-                        <input min='1' max='100' type='number' defaultValue='1'
-                        className="quantity" style={{width: '50px'}} />
-                        <Button PlusMinus><FaPlus/></Button>
-                    </div>
-                    <div className="prices">
-                        <div className="amount">$40.00</div>
-                        <div className="remove"><u><FaTrashAlt/>Eliminar artículo</u></div>
-                    </div>
-                </div>
+                {
+                misProductos.map((producto) => {
+                    total += producto.precio * producto.cantidad;
+                    cantidadProd = producto.cantidad + cantidadProd;
 
+                    return(
+                    <div className="Cart-Items" key={producto.id}>
+                        <div className="image-box">
+                            <img src={producto.imagen} className='prod-image' alt=''/>
+                        </div>
+
+                        <div className="about">
+                            <h1 className="title">{producto.nombre}</h1>
+                            <h3 className="subtitle">Precio: $ {producto.precio}</h3>
+                        </div>
+
+                        <div className="counter">
+                            <Button PlusMinus onClick={()=>minusAmount(producto)}><FaMinus/></Button>
+                            <input min='1' max='100' type='number' value={producto.cantidad}
+                            className="quantity" name='quantity' onChange={handleAmountChange} style={{width: '50px'}} />
+                            <Button PlusMinus onClick={()=>plusAmount(producto)}><FaPlus/></Button>
+                        </div>
+
+                        <div className="prices">
+                            <div className="amount">${(producto.precio*producto.cantidad).toFixed(2)}</div>
+                            <button className="remove" onClick={()=>deleteProduct(producto.id)}><u><FaTrashAlt/>Eliminar artículo</u></button>
+                        </div>
+                    </div>
+                    )
+                })
+                }
                 <hr/> 
                 <div className="checkout">
                     <div className="total">
                       <div>
                           <div className="Subtotal">Sub-Total</div>
-                          <div className="items">2 artículos</div>
+                          <div className="items">{cantidadProd} productos</div>
                       </div>
-                      <div className="total-amount">$40.00</div>
+                      
+                      <div className="total-amount">${total = total.toFixed(2)}</div>
                     </div>
-                    <Button Pagar>Pagar</Button>
+                    <Button Pagar type='button' onClick={()=>Pay()}>Pagar</Button>
                 </div>
             </CartContainer>
-
+            :
+            <CartContainer>
+                <p>El carrito de compras está vacío</p>
+                <p><img src={CartEmpty} alt=''/></p>
+            </CartContainer>
+            }
             </Container>
+            <Alert
+            type={alert.type}
+            message={alert.message}
+            stateAlert={stateAlert}
+            changeStateAlert={changeStateAlert}/>
         </Container>
         </>
     );
@@ -69,6 +166,11 @@ const CartContainer = styled.div`
     justify-content: center;
     align-items: center;
     min-height: 277px;
+
+    p{
+        font-size: 50px;
+        text-align: center;
+    }
 
     .Action{
     	font-size: 14px;
@@ -164,11 +266,14 @@ const CartContainer = styled.div`
     }
 
     .remove{
-    	padding-top: 5px;
+    	padding: 5px;
     	font-size: 14px;
     	font-weight: 600;
     	cursor: pointer;
         color: var(--light-orange);
+        background-color: var(--primary-blue);
+        border-radius: 12px;
+        border: none;
     }
 
     .pad{

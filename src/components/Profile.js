@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Container from '../elements/Container'
 import TitlePage from '../elements/TitlePage'
 import UserIcon from '../images/user.png'
@@ -77,7 +77,7 @@ const Profile = () => {
             default:
               break;
         }
-      }
+      };
 
     const handleSubmitName = async (e) => {
       console.log('Ejecutando Handle Name');
@@ -111,7 +111,7 @@ const Profile = () => {
       };
 
     const handleSubmitPassword = async (e) => {
-        console.log('Ejecutando Handle Password');
+        //console.log('Ejecutando Handle Password');
         
         e.preventDefault();
         changeStateAlert(false);
@@ -157,7 +157,7 @@ const Profile = () => {
                     console.log(error.code);
                     break;
             }
-            changeAlert({type: 'error', message: error});
+            changeAlert({type: 'error', message: message});
           });
         };
 
@@ -167,12 +167,12 @@ const Profile = () => {
         changeStateAlert(false);
         changeAlert({});
 
-        if(street == '' ||
-           number == '' ||
-           colony == '' ||
-           zipCode == '' ||
-           city == '' ||
-           state == ''
+        if(street === '' ||
+           number === '' ||
+           colony === '' ||
+           zipCode === '' ||
+           city === '' ||
+           state === ''
         ){ //Espacios vacios
             console.log('Espacios sin llenar');
             changeStateAlert(true);
@@ -183,7 +183,7 @@ const Profile = () => {
             return;
         }
         else{
-            if(address.length != 0) //Si ya existe una direccion
+            if(address.length !== 0) //Si ya existe una direccion
             {
                 updateAddress(
                     address[0].id,
@@ -281,7 +281,7 @@ const Profile = () => {
                     <hr />
                     <Container Profile>
                         <form action='' onSubmit={handleSubmitName}>
-                        Nombre de usuario
+                        Nuevo nombre de usuario
                         <input
                             type={'text'}
                             name={'name'}
@@ -302,7 +302,7 @@ const Profile = () => {
                             value={password}
                             onChange={handleChange}
                             placeholder='Nueva contraseña'/>
-                        Confirmar nueva contraseña
+                        Repetir nueva contraseña
                         <input
                             type={'password'}
                             name={'password2'}
@@ -323,7 +323,7 @@ const Profile = () => {
                     <hr />
                     <Container Address>
                         {
-                        address.length != 0
+                        address.length !== 0
                         ?
                         address.map((direccion) => {
                         return(

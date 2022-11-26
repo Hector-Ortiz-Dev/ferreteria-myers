@@ -1,9 +1,9 @@
 import {useState, useEffect} from 'react'
 import { db } from '../firebase/firebaseConfig';
-import { doc, collection, onSnapshot, query, where, limit, orderBy } from 'firebase/firestore';
+import { collection, onSnapshot, query, where, limit, orderBy } from 'firebase/firestore';
 
 const useGetSingleProduct = (producto_id) => {
-    console.log('Deploy useGetSingleProduct id: ' + producto_id);
+    //console.log('Deploy useGetSingleProduct id: ' + producto_id);
     const [products, changeProducts] = useState([]);
 
     useEffect(() => {

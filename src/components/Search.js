@@ -21,7 +21,7 @@ const Search = () => {
                   </select> 
                 </div>
               </div>
-              <p className='searchText'>Búsqueda no especificada</p>
+              <p className='searchText'>Búsqueda: </p>
             </Navigate>
 
             <Section>

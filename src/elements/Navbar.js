@@ -4,13 +4,21 @@ import logo from '../images/logo.png'
 import styled, {css} from 'styled-components'
 import {NavLink} from 'react-router-dom'
 import ButtonCloseSession from './ButtonCloseSession'
+import { useGetMisProductos } from '../hooks/useGetMisProducts'
 
 import { FaUser, FaShoppingCart } from 'react-icons/fa';
 
 const Navbar = () =>
 {
   const {user} = useAuth();
-  console.log(user);
+  //console.log(user);
+
+  let cantidadProd = 0;
+  const [misProductos] = useGetMisProductos(user.uid);
+
+  misProductos.map((producto) => {
+    cantidadProd = producto.cantidad + cantidadProd;
+  });
 
   return (
     <>
@@ -29,7 +37,7 @@ const Navbar = () =>
                 <Container Account>
                   <NavLink className={'profile'} to='/Profile'><FaUser/> {user.displayName}</NavLink>
                   <NavLink className={'cart'} to='/Cart'><FaShoppingCart/> Carrito</NavLink>
-                  <NavLink className={'noCart'} to='/Cart'>4</NavLink>
+                  <NavLink className={'noCart'} to='/Cart'>{cantidadProd}</NavLink>
                   <ButtonCloseSession/>
                 </Container>
               :

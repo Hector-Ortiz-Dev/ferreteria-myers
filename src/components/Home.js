@@ -31,7 +31,7 @@ const Home = () =>
                 <Container Card key={product.id}>
                   <img height='140px' width='200px' src={product.imagen} alt='product'/>
                   <p>{product.nombre}</p>
-                  <p>${product.precio}</p>
+                  <p>${product.precio.toFixed(2)}</p>
                   <Button VerMas><Link to={'/Product/' + product.id}>Ver más</Link></Button>
                 </Container>
                 );
@@ -52,7 +52,7 @@ const Home = () =>
                 <Container Card key={product.id}>
                   <img height='140px' width='200px' src={product.imagen} alt='product'/>
                   <p>{product.nombre}</p>
-                  <p>${product.precio}</p>
+                  <p>${product.precio.toFixed(2)}</p>
                   <Button VerMas><Link to={'/Product/' + product.id}>Ver más</Link></Button>
                 </Container>
                 );
@@ -73,7 +73,7 @@ const Home = () =>
                 <Container Card key={product.id}>
                   <img height='140px' width='200px' src={product.imagen} alt='product'/>
                   <p>{product.nombre}</p>
-                  <p>${product.precio}</p>
+                  <p>${product.precio.toFixed(2)}</p>
                   <Button VerMas><Link to={'/Product/' + product.id}>Ver más</Link></Button>
                 </Container>
                 );
